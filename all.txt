@@ -1,0 +1,816 @@
+mysql> CREATE TABLE students (
+    -> id INT NOT NULL AUTO_INCREMENT,
+    -> name VARCHAR(30),
+    -> city VARCHAR(30),
+    -> PRIMARY KEY (id)
+    -> );
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO students (name, city)
+    -> VALUES (Véronique, Paris);
+ERROR 1054 (42S22): Unknown column 'Véronique' in 'field list'
+mysql> INSERT INTO students (name, city)
+    -> VALUES ("Véronique", "Paris");
+Query OK, 1 row affected (0.06 sec)
+
+mysql> INSERT INTO students (name, city)
+    -> VALUES ("Véronique", "Paris");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> DELETE FROM students WHERE id=2;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO students (name, city)
+    -> VALUES ("Steven", "Lyon");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO students (name, city)
+    -> VALUES ("Marc", "Marseille");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO students (name, city)
+    -> VALUES ("Nour", "Lyon");
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO students (name, city)
+    -> VALUES
+    -> ("Romain", "Paris"),
+    -> ("Sophie", "Paris");
+Query OK, 2 rows affected (0.01 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM students
+    -> ;
++----+-----------+-----------+
+| id | name      | city      |
++----+-----------+-----------+
+|  1 | Véronique | Paris     |
+|  3 | Steven    | Lyon      |
+|  4 | Marc      | Marseille |
+|  5 | Nour      | Lyon      |
+|  6 | Romain    | Paris     |
+|  7 | Sophie    | Paris     |
++----+-----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> CREATE TABLE languages (
+    -> id INT  NOT NULL AUTO_INCREMENT,
+    -> name VARCHAR(30)
+    -> );
+ERROR 1075 (42000): Incorrect table definition; there can be only one auto column and it must be defined as a key
+mysql> CREATE TABLE languages (
+    -> id INT NOT NULL AUTO_INCREMENT,
+    -> name VARCHAR(30)
+    -> ^C
+mysql> CREATE TABLE languages (
+    -> id INT NOT NULL AUTO_INCREMENT,
+    -> name VARCHAR(30),
+    -> PRIMARY KEY (id));
+Query OK, 0 rows affected (0.01 sec)
+
+mysql> INSERT INTO languages (name)
+    -> VALUES
+    -> ("French"),
+    -> ("English"),
+    -> ("German"),
+    -> ("Spanish"),
+    -> ("Mandarin");
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from languages
+    -> ;
++----+----------+
+| id | name     |
++----+----------+
+|  1 | French   |
+|  2 | English  |
+|  3 | German   |
+|  4 | Spanish  |
+|  5 | Mandarin |
++----+----------+
+5 rows in set (0.00 sec)
+
+mysql> CREATE TABLE favorites (
+    -> id INT NOT NULL AUTO_INCREMENT,
+    -> class VARCHAR(30),
+    -> sport VARCHAR(30),
+    -> student_id INT,
+    -> PRIMARY KEY (id),
+    -> FOREIGN KEY (student_id) REFERENCES students(id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO favorites (class, sport, student_id)
+    -> VALUES
+    -> ("Maths", "Cricket", 2),
+    -> ("Music", "Hip_hop", 6),
+    -> ("Arts", "Boxing", 1),
+    -> ("Literature", "Tennis", 3),
+    -> ("Computer science", "Tennis", 5),
+    -> ("Arts", "Baseball", 4);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`school`.`favorites`, CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> INSERT INTO favorites (class, sport, student_id)
+    -> VALUES
+    -> ("Maths", "Cricket", 2),
+    -> ("Music", "Hip_hop", 6),
+    -> ("Arts", "Boxing", 1),
+    -> ("Literature", "Tennis", 3);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`school`.`favorites`, CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> describe favorites
+    -> ;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| id         | int         | NO   | PRI | NULL    | auto_increment |
+| class      | varchar(30) | YES  |     | NULL    |                |
+| sport      | varchar(30) | YES  |     | NULL    |                |
+| student_id | int         | YES  | MUL | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+mysql> INSERT INTO favorites (class, sport, student_id)
+    -> VALUES
+    -> ("Maths", "Cricket", 2);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`school`.`favorites`, CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> INSERT INTO favorites (class, sport, student_id)
+    -> VALUES ("Maths", "Cricket", 2);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`school`.`favorites`, CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> DESCRIBE student;
+ERROR 1146 (42S02): Table 'school.student' doesn't exist
+mysql> DESCRIBE students;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int         | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(30) | YES  |     | NULL    |                |
+| city  | varchar(30) | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+3 rows in set (0.00 sec)
+
+mysql> INSERT INTO favorites (class, sport, student_id)
+    -> ("Maths", "Cricket", 2);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '"Maths", "Cricket", 2)' at line 2
+mysql> INSERT INTO favorites (class, sport, student_id)
+    -> VALUES ("Maths", "Cricket", 2);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`school`.`favorites`, CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> DESCRIBE favorites;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| id         | int         | NO   | PRI | NULL    | auto_increment |
+| class      | varchar(30) | YES  |     | NULL    |                |
+| sport      | varchar(30) | YES  |     | NULL    |                |
+| student_id | int         | YES  | MUL | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT * FROM students;
++----+-----------+-----------+
+| id | name      | city      |
++----+-----------+-----------+
+|  1 | Véronique | Paris     |
+|  3 | Steven    | Lyon      |
+|  4 | Marc      | Marseille |
+|  5 | Nour      | Lyon      |
+|  6 | Romain    | Paris     |
+|  7 | Sophie    | Paris     |
++----+-----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> INSERT INTO favorites (class, sport, student_id)
+    -> VALUES
+    -> ("Maths", "Cricket", 3);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> INSERT INTO favorites (class, sport, student_id)
+    -> VALUES
+    -> ("Music", "Hip_hop", 7),
+    -> ("Arts", "Boxing", 1),
+    -> ("Literature", "Tennis", 4);
+Query OK, 3 rows affected (0.06 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO favorites (class, sport, student_id)
+    -> VALUES
+    -> ("Computer Science", "Tennis", 6),
+    -> ("Arts", "Baseball", 5);
+Query OK, 2 rows affected (0.00 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * favorites
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'favorites' at line 1
+mysql> SELECT * FROM favorites;
++----+------------------+----------+------------+
+| id | class            | sport    | student_id |
++----+------------------+----------+------------+
+| 14 | Maths            | Cricket  |          3 |
+| 15 | Music            | Hip_hop  |          7 |
+| 16 | Arts             | Boxing   |          1 |
+| 17 | Literature       | Tennis   |          4 |
+| 18 | Computer Science | Tennis   |          6 |
+| 19 | Arts             | Baseball |          5 |
++----+------------------+----------+------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM students;
++----+-----------+-----------+
+| id | name      | city      |
++----+-----------+-----------+
+|  1 | Véronique | Paris     |
+|  3 | Steven    | Lyon      |
+|  4 | Marc      | Marseille |
+|  5 | Nour      | Lyon      |
+|  6 | Romain    | Paris     |
+|  7 | Sophie    | Paris     |
++----+-----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM languages;
++----+----------+
+| id | name     |
++----+----------+
+|  1 | French   |
+|  2 | English  |
+|  3 | German   |
+|  4 | Spanish  |
+|  5 | Mandarin |
++----+----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM favories;
+ERROR 1146 (42S02): Table 'school.favories' doesn't exist
+mysql> SELECT * FROM favorites;
++----+------------------+----------+------------+
+| id | class            | sport    | student_id |
++----+------------------+----------+------------+
+| 14 | Maths            | Cricket  |          3 |
+| 15 | Music            | Hip_hop  |          7 |
+| 16 | Arts             | Boxing   |          1 |
+| 17 | Literature       | Tennis   |          4 |
+| 18 | Computer Science | Tennis   |          6 |
+| 19 | Arts             | Baseball |          5 |
++----+------------------+----------+------------+
+6 rows in set (0.00 sec)
+
+mysql> CREATE TABLE students_languages (
+    -> id INT NOT NULL AUTO_INCREMENT,
+    -> student_id INT,
+    -> language_id INT,
+    -> PRIMARY KEY (id),
+    -> FOREIGN KEY student_id REFERENCES students(id),
+    -> FOREIGN KEY language_id REFERENCES languages(id));
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'REFERENCES students(id),
+FOREIGN KEY language_id REFERENCES languages(id))' at line 6
+mysql> CREATE TABLE students_languages (
+    -> id INT NOT NULL AUTO_INCREMENT,
+    -> student_id INT,
+    -> language_id INT,
+    -> PRIMARY KEY (id),
+    -> FOREIGN KEY (student_id) REFERENCES students(id),
+    -> FOREIGN KEY (language_id) REFERENCES languages(id));
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> INSERT INTO students_languages (student_id, language_id)
+    -> VALUES
+    -> (1, 1),
+    -> (1, 2),
+    -> (3, 1),
+    -> (3, 3),
+    -> (4, 1),
+    -> (5, 1),
+    -> (5, 2),
+    -> (5, 4),
+    -> (5, 5),
+    -> (6, 1),
+    -> (6, 5),
+    -> (7, 1),
+    -> (7, 2),
+    -> (7, 3);
+Query OK, 14 rows affected (0.01 sec)
+Records: 14  Duplicates: 0  Warnings: 0
+
+mysql> SELECT * FROM students;
++----+-----------+-----------+
+| id | name      | city      |
++----+-----------+-----------+
+|  1 | Véronique | Paris     |
+|  3 | Steven    | Lyon      |
+|  4 | Marc      | Marseille |
+|  5 | Nour      | Lyon      |
+|  6 | Romain    | Paris     |
+|  7 | Sophie    | Paris     |
++----+-----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM favorites;
++----+------------------+----------+------------+
+| id | class            | sport    | student_id |
++----+------------------+----------+------------+
+| 14 | Maths            | Cricket  |          3 |
+| 15 | Music            | Hip_hop  |          7 |
+| 16 | Arts             | Boxing   |          1 |
+| 17 | Literature       | Tennis   |          4 |
+| 18 | Computer Science | Tennis   |          6 |
+| 19 | Arts             | Baseball |          5 |
++----+------------------+----------+------------+
+6 rows in set (0.00 sec)
+
+mysql> SELECT * FROM languages;
++----+----------+
+| id | name     |
++----+----------+
+|  1 | French   |
+|  2 | English  |
+|  3 | German   |
+|  4 | Spanish  |
+|  5 | Mandarin |
++----+----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT * FROM students
+    -> WHERE id = 4;
++----+------+-----------+
+| id | name | city      |
++----+------+-----------+
+|  4 | Marc | Marseille |
++----+------+-----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM students
+    -> WHERE id = 6;
++----+--------+-------+
+| id | name   | city  |
++----+--------+-------+
+|  6 | Romain | Paris |
++----+--------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.name, students.city FROM students
+    -> WHERE id = 1;
++-----------+-------+
+| name      | city  |
++-----------+-------+
+| Véronique | Paris |
++-----------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.name FROM students
+    -> WHERE id = 3;
++--------+
+| name   |
++--------+
+| Steven |
++--------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM students
+    -> WHERE city = "Paris";
++----+-----------+-------+
+| id | name      | city  |
++----+-----------+-------+
+|  1 | Véronique | Paris |
+|  6 | Romain    | Paris |
+|  7 | Sophie    | Paris |
++----+-----------+-------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT students.name FROM students
+    -> WHERE city = "Lyon";
++--------+
+| name   |
++--------+
+| Steven |
+| Nour   |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT students.id, students.name, students.city, favorites.class, favorites.sport FROM STUDENTS
+
+    -> INNER JOIN students ON students.id = favorites.student_id
+    -> WHERE students.id = 5;
+ERROR 1066 (42000): Not unique table/alias: 'students'
+mysql> SELECT students.id, students.name, students.city, favorites.class, favorites.sport FROM STUDENTS
+
+    -> INNER JOIN students ON students.id = favorites.student_id
+    -> WHERE id = 5;
+ERROR 1066 (42000): Not unique table/alias: 'students'
+mysql> SELECT students.id, students.name, students.city, favorites.class, favorites.sport FROM STUDENTS
+
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE students.id = 5;
++----+------+------+-------+----------+
+| id | name | city | class | sport    |
++----+------+------+-------+----------+
+|  5 | Nour | Lyon | Arts  | Baseball |
++----+------+------+-------+----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.name, favorites.sport FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE students.id = 5;
++------+----------+
+| name | sport    |
++------+----------+
+| Nour | Baseball |
++------+----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.id, students.name, students.city, favorites.class, favorites.sport FROM STUDENTS
+
+    -> INNER JOIN students ON students.id = favorites.student_id
+    -> WHERE id = 6;
+ERROR 1066 (42000): Not unique table/alias: 'students'
+mysql> SELECT students.id, students.name, students.city, favorites.class, favorites.sport FROM STUDENTS
+
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE students.id = 6;
++----+--------+-------+------------------+--------+
+| id | name   | city  | class            | sport  |
++----+--------+-------+------------------+--------+
+|  6 | Romain | Paris | Computer Science | Tennis |
++----+--------+-------+------------------+--------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.name, favorites.sport FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE students.id = 5;
++------+----------+
+| name | sport    |
++------+----------+
+| Nour | Baseball |
++------+----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.name, favorites.class FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE students.id = 1;
++-----------+-------+
+| name      | class |
++-----------+-------+
+| Véronique | Arts  |
++-----------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE favorites.class = "Music";
++----+--------+-------+----+-------+---------+------------+
+| id | name   | city  | id | class | sport   | student_id |
++----+--------+-------+----+-------+---------+------------+
+|  7 | Sophie | Paris | 15 | Music | Hip_hop |          7 |
++----+--------+-------+----+-------+---------+------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.id, students.name, students.city FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE favorites.class = "Music";
++----+--------+-------+
+| id | name   | city  |
++----+--------+-------+
+|  7 | Sophie | Paris |
++----+--------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.name FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE favorites.sport = "Tennis";
++--------+
+| name   |
++--------+
+| Marc   |
+| Romain |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT students.name FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE favorites.class = "Arts";
++-----------+
+| name      |
++-----------+
+| Véronique |
+| Nour      |
++-----------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT students.name FROM STUDENTS
+    -> WHERE students.city = "Paris"^C
+mysql> SELECT COUNT(students.name) FROM STUDENTS
+    -> WHERE students.city = "Paris";
++----------------------+
+| COUNT(students.name) |
++----------------------+
+|                    3 |
++----------------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT students.name FROM STUDENTS
+    -> WHERE students.city = "Paris";
++-----------+
+| name      |
++-----------+
+| Véronique |
+| Romain    |
+| Sophie    |
++-----------+
+3 rows in set (0.00 sec)
+
+mysql> SELECT * FROM students_langues
+    -> ;
+ERROR 1146 (42S02): Table 'school.students_langues' doesn't exist
+mysql>
+mysql>
+mysql> SELECT * FROM students_langues;
+ERROR 1146 (42S02): Table 'school.students_langues' doesn't exist
+mysql> SELECT * FROM students_languages;
++----+------------+-------------+
+| id | student_id | language_id |
++----+------------+-------------+
+|  1 |          1 |           1 |
+|  2 |          1 |           2 |
+|  3 |          3 |           1 |
+|  4 |          3 |           3 |
+|  5 |          4 |           1 |
+|  6 |          5 |           1 |
+|  7 |          5 |           2 |
+|  8 |          5 |           4 |
+|  9 |          5 |           5 |
+| 10 |          6 |           1 |
+| 11 |          6 |           5 |
+| 12 |          7 |           1 |
+| 13 |          7 |           2 |
+| 14 |          7 |           3 |
++----+------------+-------------+
+14 rows in set (0.00 sec)
+
+mysql> SELECT * FROM languages;
++----+----------+
+| id | name     |
++----+----------+
+|  1 | French   |
+|  2 | English  |
+|  3 | German   |
+|  4 | Spanish  |
+|  5 | Mandarin |
++----+----------+
+5 rows in set (0.00 sec)
+
+mysql> SELECT students.id, students.name, students.city, students_languages.language_id
+    -> FROM students
+    -> INNER JOIN students_languages ON students.id = students_languages.student_id
+    -> WHERE students.id = 1;
++----+-----------+-------+-------------+
+| id | name      | city  | language_id |
++----+-----------+-------+-------------+
+|  1 | Véronique | Paris |           1 |
+|  1 | Véronique | Paris |           2 |
++----+-----------+-------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT students.id, students.name, students.city, languages.id
+    -> FROM students
+    -> INNER JOIN students_languages ON students.id = students_languages.student_id
+    -> WHERE students.id = 1;
+ERROR 1054 (42S22): Unknown column 'languages.id' in 'field list'
+mysql> SELECT students.id, students.name, students.city, students_languages.language_id^C
+mysql> SELECT students.id, students.name, students.city, languages.name
+    -> FROM students
+    -> INNER JOIN students_languages ON students.id = students_languages.student_id
+    -> INNER JOIN students_languages ON languages.id = students_languages.language_id
+    -> WHERE students.id = 1;
+ERROR 1066 (42000): Not unique table/alias: 'students_languages'
+mysql> SELECT students.id, students.name, students.city, students_languages.language_id, languages.name
+    -> FROM students
+    -> INNER JOIN students_languages ON students.id = students_languages.student_id
+    -> INNER JOIN students_languages ON languages.id = students_languages.language_id
+    -> WHERE students.id = 1;
+ERROR 1066 (42000): Not unique table/alias: 'students_languages'
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql>
+mysql> SELECT * FROM students AND SELECT languages.name FROM languages ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND SELECT languages.name FROM languages' at line 1
+mysql> SELECT * FROM students AND languages.name FROM languages ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND languages.name FROM languages' at line 1
+mysql> SELECT * FROM students AND languages.name FROM languages;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AND languages.name FROM languages' at line 1
+mysql> SELECT students.id, students.name, students.city, languages.name, students_languages.language_id
+    -> FROM students
+    -> INNER JOIN students_languages ON students.id = students_languages.student_id
+    -> INNER JOIN languages ON languages.id = students_languages.language_id
+    -> WHERE students.id = 1;
++----+-----------+-------+---------+-------------+
+| id | name      | city  | name    | language_id |
++----+-----------+-------+---------+-------------+
+|  1 | Véronique | Paris | French  |           1 |
+|  1 | Véronique | Paris | English |           2 |
++----+-----------+-------+---------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT students.id, students.name, students.city, languages.name, students_languages.language_id
+    -> FROM students
+    -> INNER JOIN students_languages ON students.id = students_languages.student_id
+    -> INNER JOIN languages ON languages.id = students_languages.language_id
+    -> WHERE students.id = 5;
++----+------+------+----------+-------------+
+| id | name | city | name     | language_id |
++----+------+------+----------+-------------+
+|  5 | Nour | Lyon | French   |           1 |
+|  5 | Nour | Lyon | English  |           2 |
+|  5 | Nour | Lyon | Spanish  |           4 |
+|  5 | Nour | Lyon | Mandarin |           5 |
++----+------+------+----------+-------------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT students.name, languages.name FROM students
+    -> INNER JOIN students_languages ON students.id = students_languages.student_id
+    -> INNER JOIN languages ON languages.id = students_languages.language_id
+    -> WHERE students.id = 6;
++--------+----------+
+| name   | name     |
++--------+----------+
+| Romain | French   |
+| Romain | Mandarin |
++--------+----------+
+2 rows in set (0.00 sec)
+
+mysql> UPDATE students
+    -> SET name = "Shane"
+    -> WHERE id = 5;
+Query OK, 1 row affected (0.08 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> UPDATE students
+    -> SET city = "Lyon"
+    -> WHERE id = 1;
+Query OK, 1 row affected (0.06 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> DELETE * FROM students
+    -> WHERE id = 2;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '* FROM students
+WHERE id = 2' at line 1
+mysql> DELETE * FROM students
+    -> WHERE id = 3;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '* FROM students
+WHERE id = 3' at line 1
+mysql> DELETE FROM students WHERE id = 3;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`school`.`favorites`, CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> SELECT * FROM students;
++----+-----------+-----------+
+| id | name      | city      |
++----+-----------+-----------+
+|  1 | Véronique | Lyon      |
+|  3 | Steven    | Lyon      |
+|  4 | Marc      | Marseille |
+|  5 | Shane     | Lyon      |
+|  6 | Romain    | Paris     |
+|  7 | Sophie    | Paris     |
++----+-----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> DELETE FROM students WHERE id = 3;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`school`.`favorites`, CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> DELETE FROM students WHERE city = "Paris";
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`school`.`favorites`, CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> ALTER TABLE students
+    -> ADD CONSTRAINT students_idfk_1 FOREIGN KEY (id)^C
+mysql> ALTER TABLE favorites
+    -> ADD CONSTRAINT favorites_fkid_1 FOREIGN KEY (student_id)^C
+mysql> ALTER TABLE students
+    -> ADD CONSTRAINT students_idfk_1 FOREIGN KEY (student_id)
+    -> REFERENCES favorites (student_id);
+ERROR 1072 (42000): Key column 'student_id' doesn't exist in table
+mysql> ALTER TABLE students
+    -> ADD CONSTRAINT students_idfk_1 FOREIGN KEY (id)
+    -> REFERENCES favorites (student_id);
+Query OK, 6 rows affected (0.04 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql>  DELETE FROM students WHERE id = 3;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`school`.`favorites`, CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> ALTER TABLE favorites
+    -> ADD CONSTRAINT favorites_idfk_1 FOREIGN KEY (id)
+    -> REFERENCES students (student_id);
+ERROR 3734 (HY000): Failed to add the foreign key constraint. Missing column 'student_id' for constraint 'favorites_idfk_1' in the referenced table 'students'
+mysql> SELECT * FROM students;
++----+-----------+-----------+
+| id | name      | city      |
++----+-----------+-----------+
+|  1 | Véronique | Lyon      |
+|  3 | Steven    | Lyon      |
+|  4 | Marc      | Marseille |
+|  5 | Shane     | Lyon      |
+|  6 | Romain    | Paris     |
+|  7 | Sophie    | Paris     |
++----+-----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> DESCRIBE students;
++-------+-------------+------+-----+---------+----------------+
+| Field | Type        | Null | Key | Default | Extra          |
++-------+-------------+------+-----+---------+----------------+
+| id    | int         | NO   | PRI | NULL    | auto_increment |
+| name  | varchar(30) | YES  |     | NULL    |                |
+| city  | varchar(30) | YES  |     | NULL    |                |
++-------+-------------+------+-----+---------+----------------+
+3 rows in set (0.01 sec)
+
+mysql> DESCRIBE favorites;
++------------+-------------+------+-----+---------+----------------+
+| Field      | Type        | Null | Key | Default | Extra          |
++------------+-------------+------+-----+---------+----------------+
+| id         | int         | NO   | PRI | NULL    | auto_increment |
+| class      | varchar(30) | YES  |     | NULL    |                |
+| sport      | varchar(30) | YES  |     | NULL    |                |
+| student_id | int         | YES  | MUL | NULL    |                |
++------------+-------------+------+-----+---------+----------------+
+4 rows in set (0.00 sec)
+
+mysql> ALTER TABLE favorites
+    -> ADD CONSTRAINT favorites_idfk_1 FOREIGN KEY (id)
+    -> REFERENCES students (id);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`school`.`#sql-1e8c_11`, CONSTRAINT `favorites_idfk_1` FOREIGN KEY (`id`) REFERENCES `students` (`id`))
+mysql> ALTER TABLE students
+    -> ADD CONSTRAINT students_idfk_1 FOREIGN KEY (id)
+    -> REFERENCES favorites (student_id);
+ERROR 1826 (HY000): Duplicate foreign key constraint name 'students_idfk_1'
+mysql> ALTER TABLE students
+    -> ADD CONSTRAINT students_idfk_2 FOREIGN KEY (id)
+    -> REFERENCES favorites (student_id);
+Query OK, 6 rows affected (0.03 sec)
+Records: 6  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE favorites
+    -> ADD CONSTRAINT favorites_idfk_2 FOREIGN KEY (id)
+    -> REFERENCES students (id);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`school`.`#sql-1e8c_11`, CONSTRAINT `favorites_idfk_2` FOREIGN KEY (`id`) REFERENCES `students` (`id`))
+mysql> ALTER TABLE favorites
+    -> ADD CONSTRAINT favorites_idfk_2 FOREIGN KEY (id)
+    -> REFERENCES favorites (student_id);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`school`.`#sql-1e8c_11`, CONSTRAINT `favorites_idfk_2` FOREIGN KEY (`id`) REFERENCES `favorites` (`student_id`))
+mysql> DELETE FROM students WHERE id = 3;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`school`.`favorites`, CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> ALTER TABLE favorites
+    -> ADD CONSTRAINT favorites_idfk_1 FOREIGN KEY (id)
+    -> REFERENCES students (id);
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`school`.`#sql-1e8c_11`, CONSTRAINT `favorites_idfk_1` FOREIGN KEY (`id`) REFERENCES `students` (`id`))
+mysql> SELECT students.name  FROM students WHERE name LIKE "%e%";
++-----------+
+| name      |
++-----------+
+| Véronique |
+| Steven    |
+| Shane     |
+| Sophie    |
++-----------+
+4 rows in set (0.01 sec)
+
+mysql> SELECT students.name favorites.sport FROM students
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE name LIKE "%e%";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.sport FROM students
+INNER JOIN favorites ON students.id = favorites.student_id
+' at line 1
+mysql> SELECT students.name favorites.sport FROM students
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE name LIKE "%e%";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.sport FROM students
+INNER JOIN favorites ON students.id = favorites.student_id
+' at line 1
+mysql> SELECT students.name, favorites.sport FROM students
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE name LIKE "%e%";
++-----------+----------+
+| name      | sport    |
++-----------+----------+
+| Véronique | Boxing   |
+| Steven    | Cricket  |
+| Shane     | Baseball |
+| Sophie    | Hip_hop  |
++-----------+----------+
+4 rows in set (0.00 sec)
+
+mysql> SELECT students.name, students.city, favorites.class FROM students
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE city LIKE "%i%";
++--------+-----------+------------------+
+| name   | city      | class            |
++--------+-----------+------------------+
+| Marc   | Marseille | Literature       |
+| Romain | Paris     | Computer Science |
+| Sophie | Paris     | Music            |
++--------+-----------+------------------+
+3 rows in set (0.00 sec)
+
+mysql>

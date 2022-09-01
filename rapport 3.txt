@@ -1,0 +1,45 @@
+mysql> SELECT students.id, students.name, students.city, languages.name, students_languages.language_id
+    -> FROM students
+    -> INNER JOIN students_languages ON students.id = students_languages.student_id
+    -> INNER JOIN languages ON languages.id = students_languages.language_id
+    -> WHERE students.id = 1;
++----+-----------+-------+---------+-------------+
+| id | name      | city  | name    | language_id |
++----+-----------+-------+---------+-------------+
+|  1 | Véronique | Paris | French  |           1 |
+|  1 | Véronique | Paris | English |           2 |
++----+-----------+-------+---------+-------------+
+2 rows in set (0.00 sec)
+
+mysql>
+
+mysql> SELECT students.id, students.name, students.city, languages.name, students_languages.language_id 
+    -> FROM students                                                                                    
+    -> INNER JOIN students_languages ON students.id = students_languages.student_id                     
+    -> INNER JOIN languages ON languages.id = students_languages.language_id                            
+    -> WHERE students.id = 5;                                                                           
++----+------+------+----------+-------------+                                                           
+| id | name | city | name     | language_id |                                                           
++----+------+------+----------+-------------+                                                           
+|  5 | Nour | Lyon | French   |           1 |                                                           
+|  5 | Nour | Lyon | English  |           2 |                                                           
+|  5 | Nour | Lyon | Spanish  |           4 |                                                           
+|  5 | Nour | Lyon | Mandarin |           5 |                                                           
++----+------+------+----------+-------------+                                                           
+4 rows in set (0.00 sec)                                                                                
+                                                                                                        
+mysql> SELECT students.name, languages.name FROM students                                               
+    -> INNER JOIN students_languages ON students.id = students_languages.student_id                     
+    -> INNER JOIN languages ON languages.id = students_languages.language_id                            
+    -> WHERE students.id = 6;                                                                           
++--------+----------+                                                                                   
+| name   | name     |                                                                                   
++--------+----------+                                                                                   
+| Romain | French   |                                                                                   
+| Romain | Mandarin |                                                                                   
++--------+----------+                                                                                   
+2 rows in set (0.00 sec)                                                                                
+                                                                                                        
+mysql>                                                      
+
+6 rows in set (0.00 sec)

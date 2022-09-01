@@ -1,0 +1,99 @@
+mysql> SELECT students.id, students.name, students.city, favorites.class, favorites.sport FROM STUDENTS
+
+    -> INNER JOIN students ON students.id = favorites.student_id
+    -> WHERE id = 6;
+ERROR 1066 (42000): Not unique table/alias: 'students'
+mysql> SELECT students.id, students.name, students.city, favorites.class, favorites.sport FROM STUDENTS
+
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE students.id = 6;
++----+--------+-------+------------------+--------+
+| id | name   | city  | class            | sport  |
++----+--------+-------+------------------+--------+
+|  6 | Romain | Paris | Computer Science | Tennis |
++----+--------+-------+------------------+--------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.name, favorites.sport FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE students.id = 5;
++------+----------+
+| name | sport    |
++------+----------+
+| Nour | Baseball |
++------+----------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.name, favorites.class FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE students.id = 1;
++-----------+-------+
+| name      | class |
++-----------+-------+
+| Véronique | Arts  |
++-----------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE favorites.class = "Music";
++----+--------+-------+----+-------+---------+------------+
+| id | name   | city  | id | class | sport   | student_id |
++----+--------+-------+----+-------+---------+------------+
+|  7 | Sophie | Paris | 15 | Music | Hip_hop |          7 |
++----+--------+-------+----+-------+---------+------------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.id, students.name, students.city FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE favorites.class = "Music";
++----+--------+-------+
+| id | name   | city  |
++----+--------+-------+
+|  7 | Sophie | Paris |
++----+--------+-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT students.name FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE favorites.sport = "Tennis";
++--------+
+| name   |
++--------+
+| Marc   |
+| Romain |
++--------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT students.name FROM STUDENTS
+    -> INNER JOIN favorites ON students.id = favorites.student_id
+    -> WHERE favorites.class = "Arts";
++-----------+
+| name      |
++-----------+
+| Véronique |
+| Nour      |
++-----------+
+2 rows in set (0.00 sec)
+
+mysql> SELECT students.name FROM STUDENTS
+    -> WHERE students.city = "Paris"^C
+mysql> SELECT COUNT(students.name) FROM STUDENTS
+    -> WHERE students.city = "Paris";
++----------------------+
+| COUNT(students.name) |
++----------------------+
+|                    3 |
++----------------------+
+1 row in set (0.01 sec)
+
+mysql> SELECT students.name FROM STUDENTS
+    -> WHERE students.city = "Paris";
++-----------+
+| name      |
++-----------+
+| Véronique |
+| Romain    |
+| Sophie    |
++-----------+
+3 rows in set (0.00 sec)
