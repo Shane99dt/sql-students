@@ -814,3 +814,94 @@ mysql> SELECT students.name, students.city, favorites.class FROM students
 3 rows in set (0.00 sec)
 
 mysql>
+mysql> show tables;
++--------------------+
+| Tables_in_school   |
++--------------------+
+| favorites          |
+| languages          |
+| students           |
+| students_languages |
++--------------------+
+4 rows in set (0.02 sec)
+
+mysql> SELECT * FROM students;
++----+-----------+-----------+
+| id | name      | city      |
++----+-----------+-----------+
+|  1 | Véronique | Lyon      |
+|  3 | Steven    | Lyon      |
+|  4 | Marc      | Marseille |
+|  5 | Shane     | Lyon      |
+|  6 | Romain    | Paris     |
+|  7 | Sophie    | Paris     |
++----+-----------+-----------+
+6 rows in set (0.00 sec)
+
+mysql> ALTER TABLE students
+    -> DROP CONSTRAINT favorites_ibfk_1;
+ERROR 3940 (HY000): Constraint 'favorites_ibfk_1' does not exist.
+mysql> ALTER TABLE students
+    -> DROP CONSTRAINT favorites_idfk_1;
+ERROR 3940 (HY000): Constraint 'favorites_idfk_1' does not exist.
+mysql> ALTER TABLE favorites
+    -> DROP CONSTRAINT favorites_idfk_1;
+ERROR 3940 (HY000): Constraint 'favorites_idfk_1' does not exist.
+mysql> ALTER TABLE favorites
+    -> DROP CONSTRAINT favorites_i^C_1;
+mysql> ALTER TABLE favorites
+    -> DROP CONSTRAINT student_id;
+ERROR 3940 (HY000): Constraint 'student_id' does not exist.
+mysql> DELETE FROM students WHERE id = 3;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`school`.`favorites`, CONSTRAINT `favorites_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> DROP CONSTRAINT student_id;^C
+mysql> DROP CONSTRAINT student_id;^C
+mysql> DROP CONSTRAINT student_id;^C
+mysql> SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_NAME='students';
++-----------------+-----------------+
+| CONSTRAINT_NAME | CONSTRAINT_TYPE |
++-----------------+-----------------+
+| PRIMARY         | PRIMARY KEY     |
+| students_idfk_1 | FOREIGN KEY     |
+| students_idfk_2 | FOREIGN KEY     |
++-----------------+-----------------+
+3 rows in set (0.01 sec)
+
+mysql> SELECT CONSTRAINT_NAME, CONSTRAINT_TYPE FROM INFORMATION_SCHEMA.TABLE_CONSTRAINTS WHERE TABLE_NAME='favorites';
++------------------+-----------------+
+| CONSTRAINT_NAME  | CONSTRAINT_TYPE |
++------------------+-----------------+
+| PRIMARY          | PRIMARY KEY     |
+| favorites_ibfk_1 | FOREIGN KEY     |
++------------------+-----------------+
+2 rows in set (0.00 sec)
+
+mysql> ALTER TABLE favorites
+    -> DROP CONSTRAINT favorites_ibfk_1;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DELETE FROM students WHERE id = 3;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`school`.`students_languages`, CONSTRAINT `students_languages_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `students` (`id`))
+mysql> ALTER TABLE students
+    -> DROP CONSTRAINT favorites_ibfk_1;^C
+mysql> ALTER TABLE students_languages
+    -> DROP CONSTRAINT students_languages_ibfk_1;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> DELETE FROM students WHERE id = 3;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> DELETE FROM students WHERE city = "Paris";
+Query OK, 2 rows affected (0.01 sec)
+
+mysql> SELECT * FROM students;
++----+-----------+-----------+
+| id | name      | city      |
++----+-----------+-----------+
+|  1 | Véronique | Lyon      |
+|  4 | Marc      | Marseille |
+|  5 | Shane     | Lyon      |
++----+-----------+-----------+
+3 rows in set (0.00 sec)
